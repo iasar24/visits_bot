@@ -1,0 +1,163 @@
+import random
+
+class VisitsBot:
+    def __init__(self):
+        self.user_name = ''
+        self.user_phone = ''
+        self.user_email = ''
+        self.booking_option = ''
+        self.travel_date = ''
+        self.travel_from = ''
+        self.travel_to = ''
+        self.num_persons = 0
+        self.hotel_budget = 0
+        self.num_rooms = 0
+        self.num_adults = 0
+        self.pickup_location = ''
+        self.drop_location = ''
+        self.user_language = ''
+        self.otp_code = ''
+
+        self.famous_places = {
+            'hindi': {
+                'agra': ['Taj Mahal', 'Red Fort'],
+                'delhi': ['India Gate', 'Lotus Temple'],
+                'jaipur': ['Hawa Mahal', 'Amber Fort']
+            },
+            'english': {
+                 'agra': ['Taj Mahal', 'Red Fort']
+            },
+            'kannada': {
+                'mysore': ['Mysore Palace', 'Chamundi Hills'],
+                'coorg': ['Abbey Falls', 'Raja\'s Seat'],
+                'bangalore': ['Lalbagh Botanical Garden', 'Cubbon Park']
+            },
+            'telugu': {
+                'hyderabad': ['Charminar', 'Golconda Fort'],
+                'vizag': ['Araku Valley', 'RK Beach'],
+                'warangal': ['Warangal Fort', 'Bhadrakali Temple']
+            }
+        }
+
+    def verify_mobile_number(self, number):
+        # Check if the phone number is 10 digits
+        return len(number) == 10 and number.isdigit()
+
+    def guide_to_famous_places(self, destination):
+        language_key = self.user_language.lower()
+        if language_key in self.famous_places and destination.lower() in self.famous_places[language_key]:
+            places = self.famous_places[language_key][destination.lower()]
+            print(f"\nHere are some famous places you can visit in {destination}:")
+            for place in places:
+                print(f"- {place}")
+        else:
+            print(f"Sorry, we don't have information about famous places in {destination} for the selected language.")
+
+    def get_travel_details(self):
+        self.travel_date = input("Enter your travel date (YYYY-MM-DD): ")
+        self.travel_from = input("Traveling from: ")
+        self.travel_to = input("Traveling to: ")
+        self.num_persons = int(input("Number of persons: "))
+
+        # Set user_language based on user's choice
+        self.display_language_menu()
+        self.user_language = self.select_language()
+
+
+        self.guide_to_famous_places(self.travel_to)
+
+    def greet_user(self):
+        print("Welcome to the VisitsBot Portal!")
+
+    def get_user_details(self):
+        self.user_name = input("May I know your name? ")
+
+
+        while True:
+            self.user_phone = input("Please provide your 10-digit phone number: ")
+            if self.verify_mobile_number(self.user_phone):
+                break
+            else:
+                print("Invalid phone number. Please enter a valid 10-digit mobile number.")
+
+        while True:
+            self.user_email = input("Kindly provide your Gmail address: ")
+            if self.verify_gmail(self.user_email):
+                break
+            else:
+                print("Invalid Gmail address. Please enter a valid Gmail address.")
+
+    def verify_gmail(self, email):
+
+        return bool(email)
+
+    def display_language_menu(self):
+        print("\nSelect Language:")
+        print("1. Hindi")
+        print("2. English")
+        print("3. Kannada")
+        print("4. Telugu")
+
+    def select_language(self):
+        choice = input("Choose your preferred language (1-4): ")
+        languages = ['Hindi', 'English', 'Kannada', 'Telugu']
+        language_choice = languages[int(choice) - 1]
+        print(f"\nSelected language: {language_choice}")
+        return language_choice
+
+    def display_booking_options(self):
+        print("\nBooking Options:")
+        print("1. Travel Booking")
+        print("2. Hotel Booking")
+        print("3. Cab Booking")
+        print("4. Flight Booking")
+
+    def get_hotel_details(self):
+        self.hotel_budget = float(input("Enter your hotel budget: "))
+        self.num_rooms = int(input("Number of rooms required: "))
+        if self.num_persons > 3 and self.num_rooms == 1:
+            print("For more than 3 persons, it is recommended to book more than 1 room.")
+            self.num_rooms += int(input("Enter the number of additional rooms required: "))
+        self.num_adults = int(input("Number of adults: "))
+
+    def get_cab_details(self):
+        self.pickup_location = input("Enter pickup location: ")
+        self.drop_location = input("Enter drop location: ")
+
+    def run_bot(self):
+        self.greet_user()
+        self.get_user_details()
+
+        self.display_language_menu()
+        user_language = self.select_language()
+        print(f"\nHello {self.user_name}! How can I assist you today in {user_language}?")
+
+        while True:
+            self.display_booking_options()
+            self.booking_option = input("Please choose a booking option (1-4): ")
+
+            if self.booking_option == '1':
+                self.get_travel_details()
+
+            elif self.booking_option == '2':
+                self.get_hotel_details()
+
+            elif self.booking_option == '3':
+                self.get_cab_details()
+
+            elif self.booking_option == '4':
+                print(f"\nRedirecting you to makemytrip.com for Flight Booking.")
+
+            else:
+                print("Invalid option. Please choose a valid option (1-4).")
+
+            another_booking = input("\nDo you want to make another booking? (yes/no): ").lower()
+            if another_booking != 'yes':
+                print(f"\nThank you, {self.user_name}! An agent will contact you shortly at {self.user_phone}.")
+                print("If you are not satisfied, please email us at earthaviral@visits.com or contact customer care at 7777999997.")
+                print("Agents will call back in 24 hours to the provided number.")
+                break
+
+
+visits_bot = VisitsBot()
+visits_bot.run_bot()
